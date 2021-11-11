@@ -73,8 +73,7 @@ class DataReceiver(threading.Thread):
                         if self._index >= 10:
                             if self.dataQue_.full():
                                 self.dataQue_.queue.clear()
-                                print("Clearing Queue")
-                            print("Put data in queue")
+
                             self.dataQue_.put((self.time, self.accelX, self.accelY, self.accelZ, self.gyroX, self.gyroY, self.gyroZ, self.magX, self.magY, self.magZ,))
                             self._index = 0
 
