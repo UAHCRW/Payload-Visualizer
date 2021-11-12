@@ -57,9 +57,9 @@ class PayloadUI:
         self.nedPlot = figure(title="Position", sizing_mode="stretch_both", x_axis_label="Time", y_axis_label="Meters")
         self.positionTab = Panel(child=self.nedPlot, title="Position")
 
-        self.accelPlot = figure(title="Accelerometer", sizing_mode="stretch_both", x_axis_label="Time", y_axis_label="g")
-        self.gyroPlot = figure(title="Gyrometer", sizing_mode="stretch_both", x_axis_label="Time", y_axis_label="dps")
-        self.magPlot = figure(title="Magnetometer", sizing_mode="stretch_both", x_axis_label="Time", y_axis_label="mGauss")
+        self.accelPlot = figure(title="Accelerometer", sizing_mode="stretch_width", x_axis_label="Time", y_axis_label="g", height=300)
+        self.gyroPlot = figure(title="Gyrometer", sizing_mode="stretch_width", x_axis_label="Time", y_axis_label="dps", height=300)
+        self.magPlot = figure(title="Magnetometer", sizing_mode="stretch_width", x_axis_label="Time", y_axis_label="mGauss", height=300)
         self.developerTab = Panel(child=column(self.accelPlot, self.gyroPlot, self.magPlot, sizing_mode="stretch_both"), title="Developer")
 
         self.startButton = Button(label="Start")
