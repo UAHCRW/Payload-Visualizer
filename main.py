@@ -133,6 +133,20 @@ class PayloadUI:
         if self._callbackId is not None:
             curdoc().remove_periodic_callback(self._callbackId)
             self._callbackId = None
+        newData = {
+            "index": [],
+            "TIME": [],
+            "ACCELX": [],
+            "ACCELY": [],
+            "ACCELZ": [],
+            "GYROX": [],
+            "GYROY": [],
+            "GYROZ": [],
+            "MAGX": [],
+            "MAGY": [],
+            "MAGZ": [],
+        }
+        self.dataSource.data = newData
 
     def receiveData(self) -> None:
         noData = False
@@ -142,55 +156,21 @@ class PayloadUI:
             except queue.Empty:
                 noData = True
             else:
-                if self.time.shape[0] >= 1000:
-                    self.time = np.roll(self.time, len(data[0]))
-                    self.accelX = np.roll(self.accelX, len(data[0]))
-                    self.accelY = np.roll(self.accelY, len(data[0]))
-                    self.accelZ = np.roll(self.accelZ, len(data[0]))
-                    self.gyroX = np.roll(self.gyroX, len(data[0]))
-                    self.gyroY = np.roll(self.gyroY, len(data[0]))
-                    self.gyroZ = np.roll(self.gyroZ, len(data[0]))
-                    self.magX = np.roll(self.magX, len(data[0]))
-                    self.magY = np.roll(self.magY, len(data[0]))
-                    self.magZ = np.roll(self.magZ, len(data[0]))
-
-                    self.time = np.append(self.time[: -len(data[0])], np.array(data[0]))
-                    self.accelX = np.append(self.accelX[: -len(data[1])], data[1])
-                    self.accelY = np.append(self.accelY[: -len(data[2])], data[2])
-                    self.accelZ = np.append(self.accelZ[: -len(data[3])], data[3])
-                    self.gyroX = np.append(self.gyroX[: -len(data[4])], data[4])
-                    self.gyroY = np.append(self.gyroY[: -len(data[5])], data[5])
-                    self.gyroZ = np.append(self.gyroZ[: -len(data[6])], data[6])
-                    self.magX = np.append(self.magX[: -len(data[7])], data[7])
-                    self.magY = np.append(self.magY[: -len(data[8])], data[8])
-                    self.magZ = np.append(self.magZ[: -len(data[9])], data[9])
-                else:
-                    self.time = np.append(self.time, np.array(data[0]))
-                    self.accelX = np.append(self.accelX, data[1])
-                    self.accelY = np.append(self.accelY, data[2])
-                    self.accelZ = np.append(self.accelZ, data[3])
-                    self.gyroX = np.append(self.gyroX, data[4])
-                    self.gyroY = np.append(self.gyroY, data[5])
-                    self.gyroZ = np.append(self.gyroZ, data[6])
-                    self.magX = np.append(self.magX, data[7])
-                    self.magY = np.append(self.magY, data[8])
-                    self.magZ = np.append(self.magZ, data[9])
-
-                indexs = np.arange(0, self.time.shape[0], 1)
+                indexs = np.arange(0, self.time.shape[0])
                 newData = {
-                    "index": indexs[:-1],
-                    "TIME": self.time[:-1],
-                    "ACCELX": self.accelX[:-1],
-                    "ACCELY": self.accelY[:-1],
-                    "ACCELZ": self.accelZ[:-1],
-                    "GYROX": self.gyroX[:-1],
-                    "GYROY": self.gyroY[:-1],
-                    "GYROZ": self.gyroZ[:-1],
-                    "MAGX": self.magX[:-1],
-                    "MAGY": self.magY[:-1],
-                    "MAGZ": self.magZ[:-1],
+                    "index": list(range(10)),
+                    "TIME": data[0],
+                    "ACCELX": data[1],
+                    "ACCELY": data[2],
+                    "ACCELZ": data[3],
+                    "GYROX": data[4],
+                    "GYROY": data[5],
+                    "GYROZ": data[6],
+                    "MAGX": data[7],
+                    "MAGY": data[8],
+                    "MAGZ": data[9],
                 }
-                self.dataSource.data.update(newData)
+                self.dataSource.stream(newData, rollover=1000)
 
 
 p = PayloadUI()
