@@ -59,7 +59,7 @@ class PayloadUI:
 
         self.accelPlot = figure(title="Accelerometer", sizing_mode="stretch_width", x_axis_label="Time", y_axis_label="g", height=300)
         self.gyroPlot = figure(title="Gyrometer", sizing_mode="stretch_width", x_axis_label="Time", y_axis_label="dps", height=300)
-        self.magPlot = figure(title="Magnetometer", sizing_mode="stretch_width", x_axis_label="Time", y_axis_label="mGauss", height=300)
+        self.magPlot = figure(title="Magnetometer", sizing_mode="stretch_width", x_axis_label="Time", y_axis_label="uTesla", height=300)
         self.developerTab = Panel(child=column(self.accelPlot, self.gyroPlot, self.magPlot, sizing_mode="stretch_both"), title="Developer")
 
         self.startButton = Button(label="Start")
@@ -94,10 +94,11 @@ class PayloadUI:
 
         self.startButton.on_click(self.connect)
         self.stopButton.on_click(self.stop)
+        self.comSelect.on_change("value", self.updatePorts)
 
-        self.updatePorts()
+        self.updatePorts(None, None, None)
 
-    def updatePorts(self) -> None:
+    def updatePorts(self, attr, old, new) -> None:
         portsAvailble = []
         ports = serial.tools.list_ports.comports()
 
@@ -147,6 +148,7 @@ class PayloadUI:
             "MAGZ": [],
         }
         self.dataSource.data = newData
+        print("Connection removed")
 
     def receiveData(self) -> None:
         noData = False
